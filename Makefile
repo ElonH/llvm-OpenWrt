@@ -21,6 +21,8 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 CMAKE_BINARY_SUBDIR:=build
 CMAKE_SOURCE_SUBDIR:=llvm
 
+PKG_BUILD_DEPENDS:=llvm/host
+
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/cmake.mk
