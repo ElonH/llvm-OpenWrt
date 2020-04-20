@@ -28,31 +28,33 @@ include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/cmake.mk
 
 CMAKE_OPTIONS+= -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SHARED_LIBS:BOOL=OFF -DLLVM_CCACHE_BUILD:BOOL=ON \
-                -DLLVM_ENABLE_PROJECTS:STRING="clang" -DLLVM_ENABLE_BINDINGS:BOOL=OFF\
+                -DLLVM_ENABLE_BINDINGS:BOOL=OFF\
 		-DLLVM_TABLEGEN=$(STAGING_DIR_HOSTPKG)/bin/llvm-tblgen -DCLANG_TABLEGEN=$(STAGING_DIR_HOSTPKG)/bin/clang-tblgen \
 		-DLLVM_DEFAULT_TARGET_TRIPLE=$(shell $(TARGET_CC) -dumpmachine) \
 		-DLLVM_BUILD_DOCS:BOOL=OFF \
 		-DLLVM_BUILD_TESTS:BOOL=OFF -DLLVM_INCLUDE_GO_TESTS:BOOL=OFF -DLLVM_INCLUDE_EXAMPLES:BOOL=OFF -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_INCLUDE_BENCHMARKS:BOOL=OFF \
 		-DCMAKE_CROSSCOMPILING=True -DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_TARGET_ARCH=X86
+		# -DLLVM_ENABLE_PROJECTS:STRING="clang"
 
 CMAKE_HOST_OPTIONS+= -DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SHARED_LIBS:BOOL=OFF -DLLVM_CCACHE_BUILD:BOOL=ON \
-                -DLLVM_ENABLE_PROJECTS:STRING="clang" -DLLVM_ENABLE_BINDINGS:BOOL=OFF\
+                -DLLVM_ENABLE_BINDINGS:BOOL=OFF \
 		-DLLVM_BUILD_DOCS:BOOL=OFF \
 		-DLLVM_BUILD_TESTS:BOOL=OFF -DLLVM_INCLUDE_GO_TESTS:BOOL=OFF -DLLVM_INCLUDE_EXAMPLES:BOOL=OFF -DLLVM_INCLUDE_TESTS:BOOL=OFF -DLLVM_INCLUDE_BENCHMARKS:BOOL=OFF \
-		-DCMAKE_CROSSCOMPILING=True -DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_TARGET_ARCH=X86
-		#-DCMAKE_CROSSCOMPILING=True -DLLVM_TARGETS_TO_BUILD=$(ARCH) -DLLVM_TARGET_ARCH=$(ARCH)
+		-DLLVM_ENABLE_PROJECTS:STRING="clang"
+		# -DCMAKE_CROSSCOMPILING=True -DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_TARGET_ARCH=X86
+		# -DCMAKE_CROSSCOMPILING=True -DLLVM_TARGETS_TO_BUILD=$(ARCH) -DLLVM_TARGET_ARCH=$(ARCH)
 
 define Host/Install
 	$(call Host/Install/Default,$(HOST_BUILD_PREFIX))	
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/bin/* $(STAGING_DIR_HOSTPKG)/bin
 endef
 
-# define Build/InstallDev
-#         # $(INSTALL_DIR) $(1)/usr/lib $(1)/usr/include $(1)/usr/share
-#         # $(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib
-#         # $(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include
-#         # $(CP) $(PKG_INSTALL_DIR)/usr/share/* $(1)/usr/share
-# endef
+define Build/InstallDev
+	# Build/InstallDev
+	# 1: $(1)
+	# 2: $(2)
+	read
+endef
 
 define Package/llvm
         SECTION:=base
@@ -68,10 +70,10 @@ define Package/llvm/description
 endef
 
 define Package/llvm/install
-        # $(INSTALL_DIR) $(1)/usr/bin $(1)/etc/init.d $(1)/etc/config
-        # $(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/ootocCLI $(1)/usr/bin/
-        # $(INSTALL_BIN) ./files/ootoc.init $(1)/etc/init.d/ootoc
-        # $(INSTALL_DATA) ./files/ootoc.conf $(1)/etc/config/ootoc
+	# Package/llvm/install
+	# 1: $(1)
+	# 2: $(2)
+	read
 endef
 
 $(eval $(call HostBuild))
