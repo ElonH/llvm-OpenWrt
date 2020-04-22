@@ -251,7 +251,7 @@ $(eval $(call BuildPackage,libllvm-dev))
 define Package/clang
 		$(call Package/llvm/default)
         TITLE:=C, C++ and Objective-C compiler (LLVM based)
-		DEPENDS:=+llvm +libclang
+		DEPENDS:=+llvm
 endef
 
 CLANG_BIN_FILES:= \
@@ -276,31 +276,95 @@ CLANG_BIN_FILES:= \
 	scan-build \
 	scan-view
 
-define Package/clang/install
-	$(INSTALL_DIR) $(1)/usr/{bin,share}
-	( \
-		cd $(PKG_INSTALL_DIR)/usr/bin; \
-		$(CP) $(strip $(CLANG_BIN_FILES)) $(1)/usr/bin; \
+CLANG_LIB_FILES:= \
+	libclangAnalysis.* \
+	libclangARCMigrate.* \
+	libclangASTMatchers.* \
+	libclangAST.* \
+	libclangBasic.* \
+	libclangCodeGen.* \
+	libclang-cpp.* \
+	libclangCrossTU.* \
+	libclangDependencyScanning.* \
+	libclangDirectoryWatcher.* \
+	libclangDriver.* \
+	libclangDynamicASTMatchers.* \
+	libclangEdit.* \
+	libclangFormat.* \
+	libclangFrontend.* \
+	libclangFrontendTool.* \
+	libclangHandleCXX.* \
+	libclangHandleLLVM.* \
+	libclangIndex.* \
+	libclangLex.* \
+	libclangParse.* \
+	libclangRewriteFrontend.* \
+	libclangRewrite.* \
+	libclangSema.* \
+	libclangSerialization.* \
+	libclang.* \
+	libclangStaticAnalyzerCheckers.* \
+	libclangStaticAnalyzerCore.* \
+	libclangStaticAnalyzerFrontend.* \
+	libclangToolingASTDiff.* \
+	libclangToolingCore.* \
+	libclangToolingInclusions.* \
+	libclangToolingRefactoring.* \
+	libclangTooling.* \
+	libclangToolingSyntax.* \
+	libclangTransformer.* \
+	$(if $(CONFIG_PACKAGE_clang-tools), \
+		libclangIncludeFixerPlugin.* \
+		libclangTidyPlugin.* \
+		libclangIncludeFixer.* \
+		libclangTidy.* \
+		libclangTidyAbseilModule.* \
+		libclangTidyAndroidModule.* \
+		libclangTidyBoostModule.* \
+		libclangTidyBugproneModule.* \
+		libclangTidyCERTModule.* \
+		libclangTidyCppCoreGuidelinesModule.* \
+		libclangTidyDarwinModule.* \
+		libclangTidyFuchsiaModule.* \
+		libclangTidyGoogleModule.* \
+		libclangTidyHICPPModule.* \
+		libclangTidyLLVMModule.* \
+		libclangTidyLinuxKernelModule.* \
+		libclangTidyMPIModule.* \
+		libclangTidyMiscModule.* \
+		libclangTidyModernizeModule.* \
+		libclangTidyObjCModule.* \
+		libclangTidyOpenMPModule.* \
+		libclangTidyPerformanceModule.* \
+		libclangTidyPortabilityModule.* \
+		libclangTidyReadabilityModule.* \
+		libclangTidyZirconModule.* \
+		libclangTidyUtils.* \
+		libfindAllSymbols.* \
 	)
+
+define Package/clang/install
+	$(INSTALL_DIR) $(1)/usr/{bin,share,lib,libexec}
+	(cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(CLANG_BIN_FILES)) $(1)/usr/bin;)
+	(cd $(PKG_INSTALL_DIR)/usr/lib; $(CP) $(strip $(CLANG_LIB_FILES)) $(1)/usr/lib;)
+	$(CP) $(PKG_INSTALL_DIR)/usr/libexec/{c++,ccc}-analyzer $(1)/usr/libexec
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/{clang,scan-build,scan-view} $(1)/usr/share
 endef
 $(eval $(call BuildPackage,clang))
 
-define Package/libclang
+define Package/libclang-dev
 		$(call Package/llvm/default)
         TITLE:=Clang library - Development package
-		DEPENDS:=+llvm
+		DEPENDS:=+llvm +clang
 endef
 
-define Package/libclang/install
-	$(INSTALL_DIR) $(1)/usr/{include,lib/cmake,libexec}
+define Package/libclang-dev/install
+	$(INSTALL_DIR) $(1)/usr/{include,lib/cmake}
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/{clang,clang-c} $(1)/usr/include
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/clang $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libclang* $(1)/usr/lib
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/cmake/clang $(1)/usr/lib/cmake
-	$(CP) $(PKG_INSTALL_DIR)/usr/libexec/{c++,ccc}-analyzer $(1)/usr/libexec
 endef
-$(eval $(call BuildPackage,libclang))
+$(eval $(call BuildPackage,libclang-dev))
 
 CLANG_TOOLS_BIN_FILES:= \
 clang-apply-replacements \
