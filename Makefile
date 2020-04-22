@@ -79,6 +79,24 @@ define Package/llvm/default
         URL:=https://github.com/msgpack/ootoc
 endef
 
+define Package/llvm/description/default
+	LLVM is a compiler-writer's toolkit that purports to 
+	make it easy to implement new languages without getting bogged down in lots of machine-specific details like Instruction Set Architectures, 
+	or theoretic details like graph-coloring, register-spill algorithms and peephole optimizations.
+endef
+define Package/libllvm/description
+	$(call Package/llvm/description/default)
+	The LLVM Core libraries provide a modern source- and target-independent optimizer, 
+	along with code generation support for many popular CPUs (as well as some less common ones!).
+	These libraries are built around a well specified code representation known as the LLVM intermediate representation ("LLVM IR").
+endef
+define Package/llvm/description
+	$(call Package/llvm/description/default)
+endef
+define Package/libllvm-dev/description
+	$(call Package/llvm/description/default)
+endef
+
 define Package/libllvm
 		$(call Package/llvm/default)
         TITLE:=Low-Level Virtual Machine (LLVM), library
@@ -256,6 +274,21 @@ define Package/libllvm-dev/install
 endef
 $(eval $(call BuildPackage,libllvm-dev))
 
+define Package/clang/description/default
+	The Clang project provides a language front-end and tooling infrastructure 
+	for languages in the C language family (C, C++, Objective C/C++, OpenCL, CUDA, and RenderScript) for the LLVM project. 
+	Both a GCC-compatible compiler driver (clang) and an MSVC-compatible compiler driver (clang-cl.exe) are provided. 
+endef
+define Package/libclang/description
+	$(call Package/clang/description/default)
+endef
+define Package/clang/description
+	$(call Package/clang/description/default)
+endef
+define Package/libclang-dev/description
+	$(call Package/clang/description/default)
+endef
+
 define Package/libclang
 		$(call Package/llvm/default)
         TITLE:=C, C++ and Objective-C compiler (LLVM based), library
@@ -423,8 +456,8 @@ endef
 $(eval $(call BuildPackage,clang-tools))
 
 define Package/lldb/description/default
-	LLDB is a next generation, high-performance debugger. \
-	It is built as a set of reusable components which highly leverage existing libraries in the larger LLVM Project, \
+	LLDB is a next generation, high-performance debugger. 
+	It is built as a set of reusable components which highly leverage existing libraries in the larger LLVM Project, 
 	such as the Clang expression parser and LLVM disassembler.
 endef
 define Package/liblldb/description
