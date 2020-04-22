@@ -79,78 +79,11 @@ define Package/llvm/default
         URL:=https://github.com/msgpack/ootoc
 endef
 
-define Package/llvm
+define Package/libllvm
 		$(call Package/llvm/default)
-        TITLE:=Low-Level Virtual Machine (LLVM)
+        TITLE:=Low-Level Virtual Machine (LLVM), library
 		DEPENDS:=+librt +libpthread +libc +libstdcpp
-        MENU:=1
 endef
-
-LLVM_BIN_FILES:= \
-	bugpoint \
-	dsymutil \
-	llc \
-	lli \
-	llvm-addr2line \
-	llvm-ar \
-	llvm-as \
-	llvm-bcanalyzer \
-	llvm-cat \
-	llvm-cfi-verify \
-	llvm-config \
-	llvm-cov \
-	llvm-c-test \
-	llvm-cvtres \
-	llvm-cxxdump \
-	llvm-cxxfilt \
-	llvm-cxxmap \
-	llvm-diff \
-	llvm-dis \
-	llvm-dlltool \
-	llvm-dwarfdump \
-	llvm-dwp \
-	llvm-elfabi \
-	llvm-exegesis \
-	llvm-extract \
-	llvm-ifs \
-	llvm-install-name-tool \
-	llvm-jitlink \
-	llvm-lib \
-	llvm-link \
-	llvm-lipo \
-	llvm-lto \
-	llvm-lto2 \
-	llvm-mc \
-	llvm-mca \
-	llvm-modextract \
-	llvm-mt \
-	llvm-nm \
-	llvm-objcopy \
-	llvm-objdump \
-	llvm-opt-report \
-	llvm-pdbutil \
-	llvm-profdata \
-	llvm-ranlib \
-	llvm-rc \
-	llvm-readelf \
-	llvm-readobj \
-	llvm-reduce \
-	llvm-rtdyld \
-	llvm-size \
-	llvm-split \
-	llvm-stress \
-	llvm-strings \
-	llvm-strip \
-	llvm-symbolizer \
-	llvm-tblgen \
-	llvm-undname \
-	llvm-xray \
-	obj2yaml \
-	opt \
-	sancov \
-	sanstats \
-	verify-uselistorder \
-	yaml2obj
 
 LLVM_LIB_FILES:= \
 	libLLVMAggressiveInstCombine.* \
@@ -224,10 +157,88 @@ LLVM_LIB_FILES:= \
 	libLTO.* \
 	libRemarks.*
 
-define Package/llvm/install
-	$(INSTALL_DIR) $(1)/usr/{bin,lib,share}
-	( cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(LLVM_BIN_FILES)) $(1)/usr/bin;)
+define Package/libllvm/install
+	$(INSTALL_DIR) $(1)/usr/lib
 	( cd $(PKG_INSTALL_DIR)/usr/lib; $(CP) $(strip $(LLVM_LIB_FILES)) $(1)/usr/lib;)
+endef
+$(eval $(call BuildPackage,libllvm))
+
+define Package/llvm
+		$(call Package/llvm/default)
+        TITLE:=Low-Level Virtual Machine (LLVM), binary
+		DEPENDS:=+libllvm
+        MENU:=1
+endef
+
+LLVM_BIN_FILES:= \
+	bugpoint \
+	dsymutil \
+	llc \
+	lli \
+	llvm-addr2line \
+	llvm-ar \
+	llvm-as \
+	llvm-bcanalyzer \
+	llvm-cat \
+	llvm-cfi-verify \
+	llvm-config \
+	llvm-cov \
+	llvm-c-test \
+	llvm-cvtres \
+	llvm-cxxdump \
+	llvm-cxxfilt \
+	llvm-cxxmap \
+	llvm-diff \
+	llvm-dis \
+	llvm-dlltool \
+	llvm-dwarfdump \
+	llvm-dwp \
+	llvm-elfabi \
+	llvm-exegesis \
+	llvm-extract \
+	llvm-ifs \
+	llvm-install-name-tool \
+	llvm-jitlink \
+	llvm-lib \
+	llvm-link \
+	llvm-lipo \
+	llvm-lto \
+	llvm-lto2 \
+	llvm-mc \
+	llvm-mca \
+	llvm-modextract \
+	llvm-mt \
+	llvm-nm \
+	llvm-objcopy \
+	llvm-objdump \
+	llvm-opt-report \
+	llvm-pdbutil \
+	llvm-profdata \
+	llvm-ranlib \
+	llvm-rc \
+	llvm-readelf \
+	llvm-readobj \
+	llvm-reduce \
+	llvm-rtdyld \
+	llvm-size \
+	llvm-split \
+	llvm-stress \
+	llvm-strings \
+	llvm-strip \
+	llvm-symbolizer \
+	llvm-tblgen \
+	llvm-undname \
+	llvm-xray \
+	obj2yaml \
+	opt \
+	sancov \
+	sanstats \
+	verify-uselistorder \
+	yaml2obj
+
+define Package/llvm/install
+	$(INSTALL_DIR) $(1)/usr/{bin,share}
+	( cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(LLVM_BIN_FILES)) $(1)/usr/bin;)
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/opt-viewer $(1)/usr/share
 endef
 $(eval $(call BuildPackage,llvm))
@@ -245,33 +256,11 @@ define Package/libllvm-dev/install
 endef
 $(eval $(call BuildPackage,libllvm-dev))
 
-define Package/clang
+define Package/libclang
 		$(call Package/llvm/default)
-        TITLE:=C, C++ and Objective-C compiler (LLVM based)
-		DEPENDS:=+llvm
+        TITLE:=C, C++ and Objective-C compiler (LLVM based), library
+		DEPENDS:=+libllvm
 endef
-
-CLANG_BIN_FILES:= \
-	c-index-test \
-	clang \
-	clang++ \
-	clang-10 \
-	clang-check \
-	clang-cl \
-	clang-cpp \
-	clang-extdef-mapping \
-	clang-format \
-	clang-import-test \
-	clang-offload-bundler \
-	clang-offload-wrapper \
-	clang-refactor \
-	clang-rename \
-	clang-scan-deps \
-	diagtool \
-	git-clang-format \
-	hmaptool \
-	scan-build \
-	scan-view
 
 CLANG_LIB_FILES:= \
 	libclangAnalysis.* \
@@ -340,18 +329,51 @@ CLANG_LIB_FILES:= \
 		libfindAllSymbols.* \
 	)
 
-define Package/clang/install
-	$(INSTALL_DIR) $(1)/usr/{bin,share,lib,libexec}
-	(cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(CLANG_BIN_FILES)) $(1)/usr/bin;)
+define Package/libclang/install
+	$(INSTALL_DIR) $(1)/usr/{lib,libexec}
 	(cd $(PKG_INSTALL_DIR)/usr/lib; $(CP) $(strip $(CLANG_LIB_FILES)) $(1)/usr/lib;)
 	$(CP) $(PKG_INSTALL_DIR)/usr/libexec/{c++,ccc}-analyzer $(1)/usr/libexec
+endef
+$(eval $(call BuildPackage,libclang))
+
+define Package/clang
+		$(call Package/llvm/default)
+        TITLE:=C, C++ and Objective-C compiler (LLVM based), binary
+		DEPENDS:=+llvm +libclang
+endef
+
+CLANG_BIN_FILES:= \
+	c-index-test \
+	clang \
+	clang++ \
+	clang-10 \
+	clang-check \
+	clang-cl \
+	clang-cpp \
+	clang-extdef-mapping \
+	clang-format \
+	clang-import-test \
+	clang-offload-bundler \
+	clang-offload-wrapper \
+	clang-refactor \
+	clang-rename \
+	clang-scan-deps \
+	diagtool \
+	git-clang-format \
+	hmaptool \
+	scan-build \
+	scan-view
+
+define Package/clang/install
+	$(INSTALL_DIR) $(1)/usr/{bin,share}
+	(cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(CLANG_BIN_FILES)) $(1)/usr/bin;)
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/{clang,scan-build,scan-view} $(1)/usr/share
 endef
 $(eval $(call BuildPackage,clang))
 
 define Package/libclang-dev
 		$(call Package/llvm/default)
-        TITLE:=Clang library - Development package
+        TITLE:=C, C++ and Objective-C compiler (LLVM based), headers
 		DEPENDS:=+llvm +clang
 endef
 
@@ -390,7 +412,7 @@ CLANG_TOOLS_LIB_FILES:= \
 define Package/clang-tools
 		$(call Package/llvm/default)
         TITLE:=clang-based tools for C/C++ developments
-		DEPENDS:=+llvm +clang
+		DEPENDS:=+clang
 endef
 
 define Package/clang-tools/install
@@ -400,6 +422,44 @@ define Package/clang-tools/install
 endef
 $(eval $(call BuildPackage,clang-tools))
 
+define Package/lldb/description/default
+	LLDB is a next generation, high-performance debugger. \
+	It is built as a set of reusable components which highly leverage existing libraries in the larger LLVM Project, \
+	such as the Clang expression parser and LLVM disassembler.
+endef
+define Package/liblldb/description
+	$(call Package/lldb/description/default)
+endef
+define Package/lldb/description
+	$(call Package/lldb/description/default)
+endef
+define Package/liblldb-dev/description
+	$(call Package/lldb/description/default)
+endef
+
+
+define Package/liblldb
+		$(call Package/llvm/default)
+        TITLE:=Next generation, high-performance debugger (LLVM based), library
+		DEPENDS:=+libclang
+endef
+
+LLDB_LIB_FILES:= \
+	liblldbIntelFeatures.* \
+	liblldb.*
+
+define Package/liblldb/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	(cd $(PKG_INSTALL_DIR)/usr/lib; $(CP) $(strip $(LLDB_LIB_FILES)) $(1)/usr/lib;)
+endef
+$(eval $(call BuildPackage,liblldb))
+
+define Package/lldb
+		$(call Package/llvm/default)
+        TITLE:=Next generation, high-performance debugger (LLVM based), binary
+		DEPENDS:=+clang +liblldb
+endef
+
 LLDB_BIN_FILES:= \
 	lldb \
 	lldb-argdumper \
@@ -407,27 +467,16 @@ LLDB_BIN_FILES:= \
 	lldb-server \
 	lldb-vscode
 
-LLDB_LIB_FILES:= \
-	liblldbIntelFeatures.* \
-	liblldb.*
-
-define Package/lldb
-		$(call Package/llvm/default)
-        TITLE:=Next generation, high-performance debugger (LLVM based)
-		DEPENDS:=+llvm
-endef
-
 define Package/lldb/install
-	$(INSTALL_DIR) $(1)/usr/{bin,lib}
+	$(INSTALL_DIR) $(1)/usr/bin
 	(cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(LLDB_BIN_FILES)) $(1)/usr/bin;)
-	(cd $(PKG_INSTALL_DIR)/usr/lib; $(CP) $(strip $(LLDB_LIB_FILES)) $(1)/usr/lib;)
 endef
 $(eval $(call BuildPackage,lldb))
 
 define Package/liblldb-dev
 		$(call Package/llvm/default)
-        TITLE:=Next generation, high-performance debugger, header files
-		DEPENDS:=+llvm +lldb
+        TITLE:=Next generation, high-performance debugger, headers
+		DEPENDS:=+lldb
 endef
 
 define Package/liblldb-dev/install
