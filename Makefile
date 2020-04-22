@@ -30,7 +30,8 @@ include $(INCLUDE_DIR)/cmake.mk
 LLVM_EXTRA_PROJECT:= \
 	$(if $(or $(CONFIG_PACKAGE_libclang),$(CONFIG_PACKAGE_libclang)),clang) \
 	$(if $(CONFIG_PACKAGE_clang-tools),clang-tools-extra) \
-	$(if $(CONFIG_PACKAGE_liblldb),lldb)
+	$(if $(CONFIG_PACKAGE_liblldb),lldb) \
+	$(if $(CONFIG_PACKAGE_liblld),lld)
 	# libunwind lld \
 	openmp parallel-libs polly pstl
 	#libc
@@ -518,6 +519,75 @@ define Package/liblldb-dev/install
 endef
 $(eval $(call BuildPackage,liblldb-dev))
 
+define Package/lld/description/default
+	LLD is a linker from the LLVM project that is a drop-in replacement for system linkers and runs much faster than them. 
+	It also provides features that are useful for toolchain developers.
+endef
+define Package/liblld/description
+	$(call Package/lld/description/default)
+endef
+define Package/lld/description
+	$(call Package/lld/description/default)
+endef
+define Package/liblld-dev/description
+	$(call Package/lld/description/default)
+endef
+
+define Package/liblld
+		$(call Package/llvm/default)
+        TITLE:=LLVM-based linker, library
+		DEPENDS:=+libllvm
+endef
+
+LLD_LIB_FILES:= \
+	liblldCOFF.* \
+	liblldCommon.* \
+	liblldCore.* \
+	liblldDriver.* \
+	liblldELF.* \
+	liblldMachO.* \
+	liblldMinGW.* \
+	liblldReaderWriter.* \
+	liblldWasm.* \
+	liblldYAML.* \
+
+define Package/liblld/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	(cd $(PKG_INSTALL_DIR)/usr/lib; $(CP) $(strip $(LLD_LIB_FILES)) $(1)/usr/lib;)
+endef
+$(eval $(call BuildPackage,liblld))
+
+LLD_BIN_FILES:= \
+	ld64.lld \
+	ld.lld \
+	lld \
+	lld-link \
+	wasm-ld \
+
+define Package/lld
+		$(call Package/llvm/default)
+        TITLE:=LLVM-based linker, binary
+		DEPENDS:=+llvm +liblld
+endef
+
+define Package/lld/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	(cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(LLD_BIN_FILES)) $(1)/usr/bin;)
+endef
+$(eval $(call BuildPackage,lld))
+
+define Package/liblld-dev
+		$(call Package/llvm/default)
+        TITLE:=LLVM-based linker, header files
+		DEPENDS:=+lld
+endef
+
+define Package/liblld-dev/install
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/lld $(1)/usr/include
+endef
+$(eval $(call BuildPackage,liblld-dev))
+
 define Package/emscripten
 		$(call Package/llvm/default)
         TITLE:=LLVM-to-JavaScript Compiler
@@ -563,42 +633,6 @@ endef
 define Package/libclang-perl
 		$(call Package/llvm/default)
         TITLE:=C, C++ and Objective-C compiler (LLVM based)
-		DEPENDS:=+llvm
-endef
-
-define Package/libclang1
-		$(call Package/llvm/default)
-        TITLE:=C interface to the clang library
-		DEPENDS:=+llvm
-endef
-
-define Package/liblld
-		$(call Package/llvm/default)
-        TITLE:=LLVM-based linker, library
-		DEPENDS:=+llvm
-endef
-
-define Package/liblld-dev
-		$(call Package/llvm/default)
-        TITLE:=LLVM-based linker, header files
-		DEPENDS:=+llvm
-endef
-
-define Package/liblldb
-		$(call Package/llvm/default)
-        TITLE:=Next generation, high-performance debugger, library
-		DEPENDS:=+llvm
-endef
-
-define Package/libllvm
-		$(call Package/llvm/default)
-        TITLE:=Modular compiler and toolchain technologies, runtime library
-		DEPENDS:=+llvm
-endef
-
-define Package/lld
-		$(call Package/llvm/default)
-        TITLE:=LLVM-based linker
 		DEPENDS:=+llvm
 endef
 
