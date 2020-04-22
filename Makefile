@@ -367,7 +367,7 @@ endef
 $(eval $(call BuildPackage,libclang-dev))
 
 CLANG_TOOLS_BIN_FILES:= \
-clang-apply-replacements \
+	clang-apply-replacements \
 	clang-change-namespace \
 	clangd \
 	clang-doc \
@@ -382,19 +382,26 @@ clang-apply-replacements \
 	modularize \
 	pp-trace
 
+CLANG_TOOLS_LIB_FILES:= \
+	libclangApplyReplacements.* \
+	libclangChangeNamespace.* \
+	libclangDaemon.* \
+	libclangDaemonTweaks.* \
+	libclangDoc.* \
+	libclangMove.* \
+	libclangQuery.* \
+	libclangReorderFields.*
+
 define Package/clang-tools
 		$(call Package/llvm/default)
         TITLE:=clang-based tools for C/C++ developments
-		DEPENDS:=+llvm
+		DEPENDS:=+llvm +clang
 endef
 
 define Package/clang-tools/install
 	$(INSTALL_DIR) $(1)/usr/{bin,lib}
-	( \
-		cd $(PKG_INSTALL_DIR)/usr/bin; \
-		$(CP) $(strip $(CLANG_BIN_FILES)) $(1)/usr/bin; \
-	)
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libfindAllSymbols.a $(1)/usr/lib
+	(cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(CLANG_TOOLS_BIN_FILES)) $(1)/usr/bin;)
+	(cd $(PKG_INSTALL_DIR)/usr/lib; $(CP) $(strip $(CLANG_TOOLS_LIB_FILES)) $(1)/usr/lib;)
 endef
 $(eval $(call BuildPackage,clang-tools))
 
