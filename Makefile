@@ -28,9 +28,9 @@ include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/cmake.mk
 
 LLVM_EXTRA_PROJECT:= \
-	$(if $(or $(CONFIG_PACKAGE_clang),$(CONFIG_PACKAGE_libclang)),clang) \
+	$(if $(or $(CONFIG_PACKAGE_libclang),$(CONFIG_PACKAGE_libclang)),clang) \
 	$(if $(CONFIG_PACKAGE_clang-tools),clang-tools-extra) \
-	$(if $(CONFIG_PACKAGE_lldb),lldb)
+	$(if $(CONFIG_PACKAGE_liblldb),lldb)
 	# libunwind lld \
 	openmp parallel-libs polly pstl
 	#libc
