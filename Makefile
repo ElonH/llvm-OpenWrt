@@ -152,108 +152,101 @@ LLVM_BIN_FILES:= \
 	verify-uselistorder \
 	yaml2obj
 
+LLVM_LIB_FILES:= \
+	libLLVMAggressiveInstCombine.* \
+	libLLVMAnalysis.* \
+	libLLVMAsmParser.* \
+	libLLVMAsmPrinter.* \
+	libLLVMBinaryFormat.* \
+	libLLVMBitReader.* \
+	libLLVMBitstreamReader.* \
+	libLLVMBitWriter.* \
+	libLLVMCFGuard.* \
+	libLLVMCodeGen.* \
+	libLLVMCore.* \
+	libLLVMCoroutines.* \
+	libLLVMCoverage.* \
+	libLLVMDebugInfoCodeView.* \
+	libLLVMDebugInfoDWARF.* \
+	libLLVMDebugInfoGSYM.* \
+	libLLVMDebugInfoMSF.* \
+	libLLVMDebugInfoPDB.* \
+	libLLVMDemangle.* \
+	libLLVMDlltoolDriver.* \
+	libLLVMDWARFLinker.* \
+	libLLVMExecutionEngine.* \
+	libLLVMFrontendOpenMP.* \
+	libLLVMFuzzMutate.* \
+	libLLVMGlobalISel.* \
+	libLLVMInstCombine.* \
+	libLLVMInstrumentation.* \
+	libLLVMInterpreter.* \
+	libLLVMipo.* \
+	libLLVMIRReader.* \
+	libLLVMJITLink.* \
+	libLLVMLibDriver.* \
+	libLLVMLineEditor.* \
+	libLLVMLinker.* \
+	libLLVMLTO.* \
+	libLLVMMC.* \
+	libLLVMMCA.* \
+	libLLVMMCDisassembler.* \
+	libLLVMMCJIT.* \
+	libLLVMMCParser.* \
+	libLLVMMIRParser.* \
+	libLLVMObjCARCOpts.* \
+	libLLVMObject.* \
+	libLLVMObjectYAML.* \
+	libLLVMOption.* \
+	libLLVMOrcError.* \
+	libLLVMOrcJIT.* \
+	libLLVMPasses.* \
+	libLLVMProfileData.* \
+	libLLVMRemarks.* \
+	libLLVMRuntimeDyld.* \
+	libLLVMScalarOpts.* \
+	libLLVMSelectionDAG.* \
+	libLLVMSupport.* \
+	libLLVMSymbolize.* \
+	libLLVMTableGen.* \
+	libLLVMTarget.* \
+	libLLVMTextAPI.* \
+	libLLVMTransformUtils.* \
+	libLLVMVectorize.* \
+	libLLVMWindowsManifest.* \
+	libLLVMX86AsmParser.* \
+	libLLVMX86CodeGen.* \
+	libLLVMX86Desc.* \
+	libLLVMX86Disassembler.* \
+	libLLVMX86Info.* \
+	libLLVMX86Utils.* \
+	libLLVMXRay.* \
+	libLTO.* \
+	libRemarks.*
+
+	# libPolly.* \
+	# libPollyISL.*
+
 define Package/llvm/install
-	# Package/llvm/install
-	# 1: $(1)
-	# LLVM_BIN_FILES: $(LLVM_BIN_FILES)
-	# PKG_INSTALL_DIR: $(PKG_INSTALL_DIR)
-	$(INSTALL_DIR) $(1)/usr/{bin,share}
-	( \
-		cd $(PKG_INSTALL_DIR)/usr/bin; \
-		$(CP) $(strip $(LLVM_BIN_FILES)) $(1)/usr/bin; \
-	)
+	$(INSTALL_DIR) $(1)/usr/{bin,lib,share}
+	( cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(LLVM_BIN_FILES)) $(1)/usr/bin;)
+	( cd $(PKG_INSTALL_DIR)/usr/lib; $(CP) $(strip $(LLVM_LIB_FILES)) $(1)/usr/lib;)
 	$(CP) $(PKG_INSTALL_DIR)/usr/share/opt-viewer $(1)/usr/share
 endef
 $(eval $(call BuildPackage,llvm))
 
-define Package/libllvm
+define Package/libllvm-dev
 		$(call Package/llvm/default)
-        TITLE:=Low-Level Virtual Machine (LLVM), libraries and headers
+        TITLE:=Low-Level Virtual Machine (LLVM), headers
 		DEPENDS:=+llvm
 endef
 
-LLVM_LIB_FILES:= \
-	libLLVMAggressiveInstCombine.a \
-	libLLVMAnalysis.a \
-	libLLVMAsmParser.a \
-	libLLVMAsmPrinter.a \
-	libLLVMBinaryFormat.a \
-	libLLVMBitReader.a \
-	libLLVMBitstreamReader.a \
-	libLLVMBitWriter.a \
-	libLLVMCFGuard.a \
-	libLLVMCodeGen.a \
-	libLLVMCore.a \
-	libLLVMCoroutines.a \
-	libLLVMCoverage.a \
-	libLLVMDebugInfoCodeView.a \
-	libLLVMDebugInfoDWARF.a \
-	libLLVMDebugInfoGSYM.a \
-	libLLVMDebugInfoMSF.a \
-	libLLVMDebugInfoPDB.a \
-	libLLVMDemangle.a \
-	libLLVMDlltoolDriver.a \
-	libLLVMDWARFLinker.a \
-	libLLVMExecutionEngine.a \
-	libLLVMFrontendOpenMP.a \
-	libLLVMFuzzMutate.a \
-	libLLVMGlobalISel.a \
-	libLLVMInstCombine.a \
-	libLLVMInstrumentation.a \
-	libLLVMInterpreter.a \
-	libLLVMipo.a \
-	libLLVMIRReader.a \
-	libLLVMJITLink.a \
-	libLLVMLibDriver.a \
-	libLLVMLineEditor.a \
-	libLLVMLinker.a \
-	libLLVMLTO.a \
-	libLLVMMC.a \
-	libLLVMMCA.a \
-	libLLVMMCDisassembler.a \
-	libLLVMMCJIT.a \
-	libLLVMMCParser.a \
-	libLLVMMIRParser.a \
-	libLLVMObjCARCOpts.a \
-	libLLVMObject.a \
-	libLLVMObjectYAML.a \
-	libLLVMOption.a \
-	libLLVMOrcError.a \
-	libLLVMOrcJIT.a \
-	libLLVMPasses.a \
-	libLLVMProfileData.a \
-	libLLVMRemarks.a \
-	libLLVMRuntimeDyld.a \
-	libLLVMScalarOpts.a \
-	libLLVMSelectionDAG.a \
-	libLLVMSupport.a \
-	libLLVMSymbolize.a \
-	libLLVMTableGen.a \
-	libLLVMTarget.a \
-	libLLVMTextAPI.a \
-	libLLVMTransformUtils.a \
-	libLLVMVectorize.a \
-	libLLVMWindowsManifest.a \
-	libLLVMX86AsmParser.a \
-	libLLVMX86CodeGen.a \
-	libLLVMX86Desc.a \
-	libLLVMX86Disassembler.a \
-	libLLVMX86Info.a \
-	libLLVMX86Utils.a \
-	libLLVMXRay.a \
-	libLTO.so* \
-	libRemarks.so* \
-
-define Package/libllvm/install
+define Package/libllvm-dev/install
 	$(INSTALL_DIR) $(1)/usr/{include,lib/cmake}
 	$(CP) $(PKG_INSTALL_DIR)/usr/include/{llvm,llvm-c} $(1)/usr/include
-	( \
-		cd $(PKG_INSTALL_DIR)/usr/lib; \
-		$(CP) $(strip $(LLVM_LIB_FILES)) $(1)/usr/lib; \
-	)
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/cmake/llvm $(1)/usr/lib/cmake
 endef
-$(eval $(call BuildPackage,libllvm))
+$(eval $(call BuildPackage,libllvm-dev))
 
 define Package/clang
 		$(call Package/llvm/default)
