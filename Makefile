@@ -29,10 +29,10 @@ include $(INCLUDE_DIR)/cmake.mk
 
 LLVM_EXTRA_PROJECT:= \
 	$(if $(or $(CONFIG_PACKAGE_clang),$(CONFIG_PACKAGE_libclang)),clang) \
-	$(if $(CONFIG_PACKAGE_clang-tools),clang-tools-extra)
-	# lldb
-	#libunwind lld
-	#openmp parallel-libs polly pstl
+	$(if $(CONFIG_PACKAGE_clang-tools),clang-tools-extra) \
+	$(if $(CONFIG_PACKAGE_lldb),lldb)
+	# libunwind lld \
+	openmp parallel-libs polly pstl
 	#libc
 	#libcxxabi
 	#libcxx
@@ -400,6 +400,42 @@ define Package/clang-tools/install
 endef
 $(eval $(call BuildPackage,clang-tools))
 
+LLDB_BIN_FILES:= \
+	lldb \
+	lldb-argdumper \
+	lldb-instr \
+	lldb-server \
+	lldb-vscode
+
+LLDB_LIB_FILES:= \
+	liblldbIntelFeatures.* \
+	liblldb.*
+
+define Package/lldb
+		$(call Package/llvm/default)
+        TITLE:=Next generation, high-performance debugger (LLVM based)
+		DEPENDS:=+llvm
+endef
+
+define Package/lldb/install
+	$(INSTALL_DIR) $(1)/usr/{bin,lib}
+	(cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(LLDB_BIN_FILES)) $(1)/usr/bin;)
+	(cd $(PKG_INSTALL_DIR)/usr/lib; $(CP) $(strip $(LLDB_LIB_FILES)) $(1)/usr/lib;)
+endef
+$(eval $(call BuildPackage,lldb))
+
+define Package/liblldb-dev
+		$(call Package/llvm/default)
+        TITLE:=Next generation, high-performance debugger, header files
+		DEPENDS:=+llvm +lldb
+endef
+
+define Package/liblldb-dev/install
+	$(INSTALL_DIR) $(1)/usr/include
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/lldb $(1)/usr/include
+endef
+$(eval $(call BuildPackage,liblldb-dev))
+
 define Package/emscripten
 		$(call Package/llvm/default)
         TITLE:=LLVM-to-JavaScript Compiler
@@ -472,12 +508,6 @@ define Package/liblldb
 		DEPENDS:=+llvm
 endef
 
-define Package/liblldb-dev
-		$(call Package/llvm/default)
-        TITLE:=Next generation, high-performance debugger, header files
-		DEPENDS:=+llvm
-endef
-
 define Package/libllvm
 		$(call Package/llvm/default)
         TITLE:=Modular compiler and toolchain technologies, runtime library
@@ -487,12 +517,6 @@ endef
 define Package/lld
 		$(call Package/llvm/default)
         TITLE:=LLVM-based linker
-		DEPENDS:=+llvm
-endef
-
-define Package/lldb
-		$(call Package/llvm/default)
-        TITLE:=Next generation, high-performance debugger
 		DEPENDS:=+llvm
 endef
 
