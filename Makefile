@@ -224,9 +224,6 @@ LLVM_LIB_FILES:= \
 	libLTO.* \
 	libRemarks.*
 
-	# libPolly.* \
-	# libPollyISL.*
-
 define Package/llvm/install
 	$(INSTALL_DIR) $(1)/usr/{bin,lib,share}
 	( cd $(PKG_INSTALL_DIR)/usr/bin; $(CP) $(strip $(LLVM_BIN_FILES)) $(1)/usr/bin;)
@@ -375,9 +372,7 @@ CLANG_TOOLS_BIN_FILES:= \
 	clang-move \
 	clang-query \
 	clang-reorder-fields \
-	clang-scan-deps \
 	clang-tidy \
-	dsymutil \
 	find-all-symbols \
 	modularize \
 	pp-trace
