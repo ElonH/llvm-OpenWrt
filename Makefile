@@ -28,8 +28,16 @@ include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/cmake.mk
 
 LLVM_EXTRA_PROJECT:= \
-	$(if $(or CONFIG_PACKAGE_clang,CONFIG_PACKAGE_libclang),clang) \
-	$(if CONFIG_PACKAGE_clang-tools,clang-tools-extra)
+	$(if $(or $(CONFIG_PACKAGE_clang),$(CONFIG_PACKAGE_libclang)),clang) \
+	$(if $(CONFIG_PACKAGE_clang-tools),clang-tools-extra)
+	# lldb
+	#libunwind lld
+	#openmp parallel-libs polly pstl
+	#libc
+	#libcxxabi
+	#libcxx
+	#libclc
+	#compiler-rt debuginfo-tests 
 
 CMAKE_OPTIONS+= \
 		-DCMAKE_BUILD_TYPE=MinSizeRel -DBUILD_SHARED_LIBS:BOOL=OFF -DLLVM_CCACHE_BUILD:BOOL=ON 			\
